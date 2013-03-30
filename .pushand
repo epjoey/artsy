@@ -1,2 +1,2 @@
 #! /bin/bash
-phd $0 artsy artsy
+phd $0 app app
