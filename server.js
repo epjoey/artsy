@@ -3,43 +3,53 @@ var app = express();
 var _ = require('underscore')._;
 var Backbone = require('backbone');
 
+// var App = {};
+// var App.routes = {
+//     '/' : 'Index',
+//     '/about' : 'About',
+//     '/classes/:class?' : 'Class',
+//     '/contact' : 'Contact'
+// };
+
 var AppRouter = Backbone.Router.extend({
-    routes: {
-        "/" : "all",
-        "/pages/:pageId?" : "subpage",
-        "/*" : "notFound"
+    controllers: {
+        index : {
+            backbone: "/",
+            express: "/"
+        },
+        subpage : {
+            backbone: "/pages/:pageId?",
+            express: "/pages/:pageId?"
+        },
+        notFound : {
+            backbone: "/pages/:pageId?",
+            express: "/pages/:pageId?"
+        }
     },
-    all: function() {
-        return 'all';
+    initialize: function(){
+        _.each(this.controllers, function(routes, controller) {
+            this.route(routes.backbone, controller); 
+        });
     },
-    subpage: function(params) {
-        return 'subpage ' + params.pageId;
+    index: function() {
+        return 'index';
+    },
+    subpage: function(pageId) {
+        return 'subpage ' + pageId;
     },
     notFound: function() {
         return 'not found';
     }
 });
 
-//var router = new AppRouter();
-// _.each(router.routes, function(callback, route) {
+var controllers = AppRouter.controllers;
+console.log(controllers);
+// _.each(routes, function(controllerName, route) {
 //     app.get(route, function(req, res){
-//         res.send(router[callback](req.params));
+//         var controller = new App.controllers.controllerName(req.params);
+//         res.send(controller.getTemplate());
 //     });
 // });
-
-var routes = {
-    '/' : 'index',
-    '/about' : 'about',
-    '/classes/:class?' : 'classes',
-    '/contact' : 'contact'
-};
-
-_.each(routes, function(controllerName, route) {
-    app.get(route, function(req, res){
-        var controller = new controllerName(req.params);
-        res.send(controller.getTemplate());
-    });
-});
 
 app.listen(3000);
 console.log('Listening on port 3000');
