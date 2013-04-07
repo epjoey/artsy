@@ -1,0 +1,20 @@
+!!!5
+html.page
+  
+  head
+    title #{locals.title} - Pain Free Yoga
+
+    <script data-main="/public/js/client" src="/public/js/lib/require-jquery.js"></script>
+  
+  body(class=locals.bodyClass)
+    
+    header
+      div Pain Free Yoga
+      nav
+        a.pushstate(href="/") home
+        a.pushstate(href="/classes") classes
+
+    div#content
+      block content
+    
+    footer footer
