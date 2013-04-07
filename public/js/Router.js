@@ -1,5 +1,10 @@
+//Page model
 define(["lib/backbone"], function(Backbone) {
   
+  //who do I know?
+  //only helper libraries, Page, and PageView
+  //Not Dom, Not Ajax
+
   return Backbone.Router.extend({
 
     contentSectionByPath: {},
@@ -7,9 +12,24 @@ define(["lib/backbone"], function(Backbone) {
     initialize: function() {
       console.log('hey, im router.');
 
-      Backbone.history.start({pushState: true, silent: true});
+      Backbone.history.start({pushState: true, silent: false});
 
-      this.cacheContentSectionsByPath();
+      /* 
+        will store in memory (this object) 
+        {
+          '/routeLiteral' : { 
+            html: html, 
+            viewController: pathToViewController (to be requred), 
+            data: viewModels(if needed) 
+          }
+        }
+      */
+
+      //get all these from the AppView
+      //var pageView = new PageView();
+      //var routeLinks = pageView.retRouteLinks(this.routes.keys); //regular express
+
+      this.cacheContentSectionsForPages();
       this.observePushStateAnchors();
 
     },
@@ -46,7 +66,7 @@ define(["lib/backbone"], function(Backbone) {
     },
 
     //run through all ps links on page and and cache ajax response
-    cacheContentSectionsByPath: function() {
+    cacheContentSectionsForPages: function() {
       var anchors = $(document).find("a.pushstate")
         , length = anchors.length
         , i;
@@ -64,6 +84,7 @@ define(["lib/backbone"], function(Backbone) {
           continue;
         }
       
+        //
         //need to return promice from this function
         this.loadContentSectionForPath(href, function(href, html) {
           //store in cache
@@ -73,6 +94,7 @@ define(["lib/backbone"], function(Backbone) {
 
     },
 
+    //move this to AppView. router shouldnt know about DOM
     //hijack all links on page and pushstate on click
     observePushStateAnchors: function() {
 
