@@ -7,17 +7,13 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: {
-          baseUrl: ".",
-          dir: "public/",
-          optimize: 'uglify',
-          //mainConfigFile:'./src/main.js',
-          modules:[
-            {
-              name:'lib/backbone/backbone'
-            }
-          ],
-          logLevel: 0,
-          inlineText: true
+          baseUrl: 'public/js',
+          mainConfigFile:'public/js/client.js',
+          include: 'client.js',
+          out: 'public/js/build/build.js',
+          optimize: 'uglify2',
+          preserveLicenseComments: false,
+          generateSourceMaps: true
         }
       }
     }

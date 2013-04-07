@@ -24,12 +24,8 @@ requirejs.config({
   }
 });
 
-require([ 
-          'lib/backbone',
-          'Router', 
-        ], function(Backbone, Router) {
+require([ 'Router' ], function(Router) {
 
-  var app = {};
-  app.router = new Router();
+  var controller = new Router();
 
 });

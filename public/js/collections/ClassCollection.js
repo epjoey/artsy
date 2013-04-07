@@ -1,5 +1,5 @@
 define(['lib/backbone'], function(Backbone) {
-  return Backbone.Model.extend({
-    
+  return Backbone.Collection.extend({
+    model: Class
   });
 });

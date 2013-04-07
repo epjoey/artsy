@@ -8,18 +8,26 @@ app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
 app.get('/', function(req, res){
-  var tpl = req.query.pushstate ? 'content/index-page' : 'index-page';
-  res.render(tpl, {});
+  var tpl = req.xhr ? 'includes/index' : 'index-page';
+  res.render(tpl, {
+    locals: {
+      title: 'Index'
+    }
+  });
 });
 
 app.get('/classes', function(req, res){
-  var tpl = req.query.pushstate ? 'content/class-index-page' : 'class-index-page';
+  var tpl = req.xhr ? 'includes/class-index' : 'class-index-page';
   res.render(tpl, {});
 });
 
 app.get('/classes/:class', function(req, res){
-  var tpl = req.query.pushstate ? 'content/class-page' : 'class-page';
-  res.render(tpl, { className: req.params.class });
+  var tpl = req.xhr ? 'includes/class' : 'class-page';
+  res.render(tpl, { 
+    locals: {
+      className: req.params.class 
+    }
+  });
 });
 
 app.listen(3000);

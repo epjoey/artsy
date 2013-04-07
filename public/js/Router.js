@@ -1,55 +1,143 @@
-define(["lib/backbone", "views/BodyView"], function(Backbone, BodyView) {
+define(["lib/backbone"], function(Backbone) {
   
   return Backbone.Router.extend({
-    
-    contentCache: {},
+
+    contentSectionByPath: {},
 
     initialize: function() {
-      
-      console.log('hey, im router');
+      console.log('hey, im router.');
 
       Backbone.history.start({pushState: true, silent: true});
 
-      //hijack all links on page 
-      $(document).on("click", "a.pushstate", function(evt) {
-        var anchor = $(evt.toElement)
-            , href = anchor.attr("href")
-            , protocol = anchor.protocol + "//";
-        
-        // Ensure the protocol is not part of URL, meaning its relative.
-        if (href && href.slice(0, protocol.length) !== protocol) {
-          
-          evt.preventDefault();
-          this.navigate(href, true);
-        }
-      }.bind(this));       
+      this.cacheContentSectionsByPath();
+      this.observePushStateAnchors();
 
     },
 
     routes: {
-      '' : 'paginate',
-      'classes' : 'paginate',
-      'classes/:className' : 'paginate'
+      '' : 'indexPage',
+      'classes' : 'classesPage',
+      'classes/:className' : 'classPage'
     },
 
-    paginate: function() {
-      var url = '/' + Backbone.history.fragment;
+    indexPage: function() {
+      //todo: use promise here
 
-      if (this.contentCache[url] !== undefined) {
-        console.log('getting page content for ' + url + ' from cache');
-        $('#content').html(this.contentCache[url]);
-        return;
+      var promise = this.getContentSectionForCurrentPage();
+      //promise.then(function(json){ elem.html(json.html)});
+
+    },
+
+    classesPage: function() {
+      this.getContentSectionForCurrentPage();
+      /*
+        promise.then(function(json){ 
+          elem.html(json.html)
+          require([json.viewClass], function(ClassesView) {
+            new ClassesView();
+          }
+        });
+      */
+    },
+
+    classPage: function() {
+      this.getContentSectionForCurrentPage();
+      
+    },
+
+    //run through all ps links on page and and cache ajax response
+    cacheContentSectionsByPath: function() {
+      var anchors = $(document).find("a.pushstate")
+        , length = anchors.length
+        , i;
+
+      for (i = 0; i < length; i++) {
+        var anchor = anchors[i]
+          , href = $(anchors[i]).attr("href");
+
+        if (!this.isValidPushStateAnchor(anchors[i])) {
+          continue;
+        }
+
+        //dont load content we are already seeing
+        if (href == location.pathname) {
+          continue;
+        }
+      
+        //need to return promice from this function
+        this.loadContentSectionForPath(href, function(href, html) {
+          //store in cache
+          this.contentSectionByPath[href] = html;
+        }.bind(this));
       }
 
-      console.log('making ajax call to ' + url);
-      $.ajax(url, {
-        data: { pushstate: true },
+    },
+
+    //hijack all links on page and pushstate on click
+    observePushStateAnchors: function() {
+
+      $(document).on("click", "a.pushstate", function(evt) {
+        var anchor = $(evt.toElement);
+
+        if (!this.isValidPushStateAnchor(anchor)) {
+          return;
+        }
+
+        //only left mouse clicks
+        if (evt.which !== 1) {
+          return;
+        }
+
+        evt.preventDefault();
+        this.navigate(anchor.attr('href'), true);
+
+      }.bind(this));      
+    },
+
+    isValidPushStateAnchor: function(anchor) {
+      var anchor = $(anchor)
+        , href = anchor.attr("href")
+        , protocol = anchor.protocol + "//";
+
+      // Ensure the protocol is not part of URL, meaning its relative.
+      if (href && href.slice(0, protocol.length) !== protocol) {
+        return true;
+      }
+      return false;
+    },
+
+
+    /*
+     todo: return Promise of returning JSON object like { html, data, viewClass }
+     */
+    getContentSectionForCurrentPage: function() {
+      var path = location.pathname
+        , cache = this.contentSectionByPath;
+
+      if (cache[path]) {
+        console.log('getting page content for ' + path + ' from cache');
+        $('#content-section').html(cache[path]);
+
+      } else {
+        this.loadContentSectionForPath(path, function(path, html){
+          $('#content-section').html(html);
+          cache[path] = html;
+        });
+      }
+
+      //return { html: html, data: data, viewClass, viewClass }
+
+    },
+
+    //return Promice instead. Promice resolution will be json { html, data, viewClass }
+    loadContentSectionForPath: function(path, success) {
+      console.log('making ajax call to ' + path);
+      $.ajax(path, {
         success: function(html) {
-          $('#content').html(html);
-          this.contentCache[url] = html;
-        }.bind(this)
-      });      
-    }
+          success(path, html); 
+        }
+      });        
+    }    
     
   });
 });
