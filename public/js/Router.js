@@ -1,9 +1,4 @@
-//Page model
 define(["lib/backbone"], function(Backbone) {
-  
-  //who do I know?
-  //only helper libraries, Page, and PageView
-  //Not Dom, Not Ajax
 
   return Backbone.Router.extend({
 
@@ -13,21 +8,6 @@ define(["lib/backbone"], function(Backbone) {
       console.log('hey, im router.');
 
       Backbone.history.start({pushState: true, silent: true});
-
-      /* 
-        will store in memory (this object) 
-        {
-          '/routeLiteral' : { 
-            html: html, 
-            viewController: pathToViewController (to be requred), 
-            data: viewModels(if needed) 
-          }
-        }
-      */
-
-      //get all these from the AppView
-      //var pageView = new PageView();
-      //var routeLinks = pageView.retRouteLinks(this.routes.keys); //regular express
 
       this.cacheContentSectionsForPages();
       this.observePushStateAnchors();
@@ -42,7 +22,6 @@ define(["lib/backbone"], function(Backbone) {
 
     indexPage: function() {
       //todo: use promise here
-
       var promise = this.getContentSectionForCurrentPage();
       //promise.then(function(json){ elem.html(json.html)});
 
@@ -94,7 +73,7 @@ define(["lib/backbone"], function(Backbone) {
 
     },
 
-    //move this to AppView. router shouldnt know about DOM
+    //move this to AppView. router shouldnt know about DOM ... or not
     //hijack all links on page and pushstate on click
     observePushStateAnchors: function() {
 
