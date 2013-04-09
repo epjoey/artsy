@@ -12,7 +12,7 @@ define(["lib/backbone"], function(Backbone) {
     initialize: function() {
       console.log('hey, im router.');
 
-      Backbone.history.start({pushState: true, silent: false});
+      Backbone.history.start({pushState: true, silent: true});
 
       /* 
         will store in memory (this object) 
@@ -80,7 +80,7 @@ define(["lib/backbone"], function(Backbone) {
         }
 
         //dont load content we are already seeing
-        if (href == location.pathname) {
+        if (href == '/' + Backbone.history.fragment) {
           continue;
         }
       
@@ -133,7 +133,7 @@ define(["lib/backbone"], function(Backbone) {
      todo: return Promise of returning JSON object like { html, data, viewClass }
      */
     getContentSectionForCurrentPage: function() {
-      var path = location.pathname
+      var path = '/' + Backbone.history.fragment
         , cache = this.contentSectionByPath;
 
       if (cache[path]) {
