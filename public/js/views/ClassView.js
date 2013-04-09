@@ -3,17 +3,19 @@ define(['lib/backbone'], function(Backbone) {
     
     initialize: function() {   
       console.log('hey, im a class');   
+      console.log(this.model);
       this.listenTo(this.model, "change", this.render);
       this.listenTo(this.model, 'destroy', this.remove);
     },
-    template: _.template($('#class-item-template').html()),
+    //template: _.template($('#class-item-template').html()),
     tagName: 'li',
     events: {
       'click' : 'alert'
     },
-    alert: function() {
-      alert('class ' + this.model.id);
-    }
+    alert: function(evt) {
+      //evt.preventDefault();
+      console.log('class ' + this.model.id);
+    },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       return this;

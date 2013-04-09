@@ -1,5 +1,25 @@
 h1 Classes
+
+classes = [{name:'easy'}, {name:'medium'}, {name:'hard'}]
 ul#class-index
   for className in ['easy', 'medium', 'hard']
     li
       a.pushstate(href="/classes/"+className)= className
+
+script(type="text/javascript")
+  (function(classes){
+    
+    require([ 'views/ClassCollectionView', 
+              'collections/ClassCollection' ], 
+
+              function(ClassCollectionView, ClassCollection) {
+
+      var collection = new ClassCollection();
+      var view = new ClassCollectionView({
+        collection: collection
+      });
+      collection.reset(classes);
+    });
+
+  
+  })(!{JSON.stringify(classes)});

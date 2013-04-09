@@ -1,14 +1,20 @@
-define(['lib/backbone'], function(Backbone) {
+define(['lib/backbone', 'views/ClassView'], function(Backbone, ClassView) {
   return Backbone.View.extend({
     initialize: function() {   
-      this.el = 'ul#class-index';
-      console.log('hey, im header');   
+      //console.log(this.collection);
+      this.listenTo(this.collection, 'reset', this.addAll);
       //this.listenTo(this.model, "change", this.render);
     },
     events: {
     },
-    render: function() {
-      console.log('render');
+    addAll: function() {
+      this.collection.each(function(classModel){
+        //console.log(classModel);
+        var view = new ClassView({
+          el: 
+          model: classModel
+        });
+      }, this);
     }
   });
 });

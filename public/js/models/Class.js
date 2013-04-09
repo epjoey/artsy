@@ -2,7 +2,7 @@ define(['lib/backbone'], function(Backbone) {
   return Backbone.Model.extend({
     defaults: {
       id: null,
-      name: '...',
+      //name: '...',
       timeOfDay: '...',
       dayOfWeek: '...',
       cost: '...'
