@@ -6,8 +6,6 @@ html.page
       if locals.title
          = locals.title + " | "
       | Pain Free Yoga
-
-    <script data-main="/public/js/client" src="/public/js/lib/require-jquery.js"></script>
   
   body(class=locals.bodyClass)
     
@@ -21,3 +19,12 @@ html.page
       block contentSection
     
     footer footer
+
+    script(data-main="/public/js/client", src="/public/js/lib/require-jquery.js")
+    script(type="text/javascript")
+      (function(data){
+
+        console.log('hey');
+
+      
+      })(!{ JSON.stringify() });

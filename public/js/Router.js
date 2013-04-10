@@ -1,5 +1,5 @@
 //Page model
-define(["lib/backbone"], function(Backbone) {
+define(["lib/backbone", 'models/ModelStore', 'views/AppView' ], function(Backbone, ModelStore, AppView) {
   
   //who do I know?
   //only helper libraries, Page, and PageView
@@ -12,6 +12,8 @@ define(["lib/backbone"], function(Backbone) {
     initialize: function() {
       console.log('hey, im router.');
 
+      this.modelStore = new ModelStore(this);
+      this.appView = new AppView(this);
       Backbone.history.start({pushState: true, silent: true});
 
       /* 
@@ -29,8 +31,8 @@ define(["lib/backbone"], function(Backbone) {
       //var pageView = new PageView();
       //var routeLinks = pageView.retRouteLinks(this.routes.keys); //regular express
 
-      this.cacheContentSectionsForPages();
-      this.observePushStateAnchors();
+      // this.cacheContentSectionsForPages();
+      // this.observePushStateAnchors();
 
     },
 
@@ -49,7 +51,8 @@ define(["lib/backbone"], function(Backbone) {
     },
 
     classesPage: function() {
-      this.getContentSectionForCurrentPage();
+      //var model = App.ModelStore.get('ClassCollection');  
+      //this.getContentSectionForCurrentPage();
       /*
         promise.then(function(json){ 
           elem.html(json.html)

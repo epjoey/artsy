@@ -11,7 +11,7 @@ define(['lib/backbone', 'views/ClassView'], function(Backbone, ClassView) {
       this.collection.each(function(classModel){
         //console.log(classModel);
         var view = new ClassView({
-          el: 
+          //el: this.$el.
           model: classModel
         });
       }, this);

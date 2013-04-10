@@ -24,8 +24,11 @@ requirejs.config({
   }
 });
 
+//our only global
+//var App = {};
+
 require([ 'Router' ], function(Router) {
 
-  var controller = new Router();
+  var r = new Router();
 
 });
